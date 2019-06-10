@@ -14,30 +14,66 @@ export default class Main extends Component {
     plugin: PropTypes.object.isRequired,
   }
 
-  render() {
-    // const { fieldValue,  plugin } = this.props
+  state = {
+    slug: '',
+    locale: '',
+    urlPrefix: '',
+    modelName: '',
+    frontendUrl: '',
+  }
+
+  componentDidMount() {
     const { plugin } = this.props
     const slug = plugin.getFieldValue('slug')
+    const {
+      locale,
+      parameters: {
+        instance: { urlPrefix },
+      },
+      itemType: {
+        attributes: { api_key: modelName },
+      },
+      site: {
+        attributes: { frontend_url: frontendUrl },
+      },
+    } = plugin
+    this.unsubscribe = plugin.addFieldChangeListener('slug', value => {
+      this.setState({ slug: value })
+    })
+    this.setState({
+      slug,
+      locale,
+      urlPrefix,
+      frontendUrl,
+      modelName,
+    })
+  }
 
-    const { urlPrefix } = plugin.parameters.instance
+  componentWillUnmount() {
+    this.unsubscribe()
+  }
+
+  render() {
+    const { plugin } = this.props
+    // eslint-disable-next-line object-curly-newline
+    const { slug, locale, urlPrefix, modelName, frontendUrl } = this.state
+
     console.log('Main plugin', plugin)
-    console.log(plugin.site.attributes.name)
-    console.log(plugin.itemType.attributes.api_key)
     console.log('=====')
-    console.log(plugin.itemId)
-    console.log(plugin.field.attributes.api_key)
-    console.log(plugin.currentUser.attributes.email)
-    console.log(plugin.parameters.instance.urlPrefix)
-
-    console.log(plugin.getFieldValue(plugin.fieldPath))
-    console.log(plugin.getFieldValue('slug'))
 
     return (
       <div className="container">
-        <a href={`${urlPrefix}${slug}`} title={slug} target="_blank" rel="noopener noreferrer" className="preview-link">
+        <a
+          href={`${urlPrefix}${locale}/${slug}`}
+          title={slug}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="preview-link"
+        >
           Preview link
         </a>
-        <p>{`${urlPrefix}${slug}`}</p>
+        <p>{`${urlPrefix}${locale}/${slug}`}</p>
+        <p style={{ color: 'red' }}>{`${frontendUrl}${locale}/${modelName}/${slug}`}</p>
       </div>
     )
   }

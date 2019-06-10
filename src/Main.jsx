@@ -20,6 +20,7 @@ export default class Main extends Component {
     urlPrefix: '',
     modelName: '',
     frontendUrl: '',
+    isVisibleFullLink: false,
   }
 
   componentDidMount() {
@@ -53,26 +54,31 @@ export default class Main extends Component {
     this.unsubscribe()
   }
 
+  handleClick = () => {
+    this.setState(prevState => ({
+      isVisibleFullLink: !prevState.isVisibleFullLink,
+    }))
+  }
+
   render() {
     const { plugin } = this.props
     // eslint-disable-next-line object-curly-newline
-    const { slug, locale, urlPrefix, modelName, frontendUrl } = this.state
-
+    const { slug, locale, urlPrefix, modelName, frontendUrl, isVisibleFullLink } = this.state
+    const fullLink = `${urlPrefix}${locale}/${modelName}/${slug}`
     console.log('Main plugin', plugin)
     console.log('=====')
 
     return (
       <div className="container">
-        <a
-          href={`${urlPrefix}${locale}/${slug}`}
-          title={slug}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="preview-link"
-        >
-          Preview link
-        </a>
-        <p>{`${urlPrefix}${locale}/${slug}`}</p>
+        <div className="link-wrap">
+          <a href={fullLink} title={slug} target="_blank" rel="noopener noreferrer" className="preview-link">
+            Preview link
+          </a>
+          <button type="button" onClick={this.handleClick}>
+            {`${isVisibleFullLink ? 'Hide' : 'Show'} full link`}
+          </button>
+        </div>
+        {isVisibleFullLink && <p>{fullLink}</p>}
         <p style={{ color: 'red' }}>{`${frontendUrl}${locale}/${modelName}/${slug}`}</p>
       </div>
     )

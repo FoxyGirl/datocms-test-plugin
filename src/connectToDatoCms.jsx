@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 export default mapPluginToProps => BaseComponent =>
+  // eslint-disable-next-line implicit-arrow-linebreak
   class ConnectToDatoCms extends Component {
+    static propTypes = {
+      plugin: PropTypes.object.isRequired,
+    }
+
     constructor(props) {
       super(props)
       this.state = mapPluginToProps(props.plugin)

@@ -19,7 +19,6 @@ export default class Main extends Component {
     locale: '',
     urlPrefix: '',
     modelName: '',
-    frontendUrl: '',
     isVisibleFullLink: false,
   }
 
@@ -34,9 +33,6 @@ export default class Main extends Component {
       itemType: {
         attributes: { api_key: modelName },
       },
-      site: {
-        attributes: { frontend_url: frontendUrl },
-      },
     } = plugin
     this.unsubscribe = plugin.addFieldChangeListener('slug', value => {
       this.setState({ slug: value })
@@ -45,7 +41,6 @@ export default class Main extends Component {
       slug,
       locale,
       urlPrefix,
-      frontendUrl,
       modelName,
     })
   }
@@ -63,7 +58,7 @@ export default class Main extends Component {
   render() {
     const { plugin } = this.props
     // eslint-disable-next-line object-curly-newline
-    const { slug, locale, urlPrefix, modelName, frontendUrl, isVisibleFullLink } = this.state
+    const { slug, locale, urlPrefix, modelName, isVisibleFullLink } = this.state
     const fullLink = `${urlPrefix}${locale}/${modelName}/${slug}`
     console.log('Main plugin', plugin)
     console.log('=====')
@@ -79,7 +74,6 @@ export default class Main extends Component {
           </button>
         </div>
         {isVisibleFullLink && <p>{fullLink}</p>}
-        <p style={{ color: 'red' }}>{`${frontendUrl}${locale}/${modelName}/${slug}`}</p>
       </div>
     )
   }
